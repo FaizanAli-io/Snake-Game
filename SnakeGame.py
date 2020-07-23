@@ -8,12 +8,13 @@ screen = pygame.display.set_mode((scW, scH))
 pygame.display.set_caption("Connect 4")
 pygame.mouse.set_cursor(*pygame.cursors.diamond)
 clock = pygame.time.Clock()
-foodpic = pygame.image.load('apple.png')
+foodpics = [pygame.image.load('apple.png'), pygame.image.load('orange.png'), pygame.image.load('mango.png'), pygame.image.load('banana.png')]
 play, autoplay, paused = True, False, True
 speed, activespeed = 10, 1
 autoplaybox, speedbox0, speedbox1, speedbox2, speedbox3 = pygame.Rect(30, 10, 160, 30), pygame.Rect(730, 10, 50, 30), pygame.Rect(790, 10, 40, 30), pygame.Rect(840, 10, 40, 30), pygame.Rect(890, 10, 40, 30)
 font = pygame.font.SysFont('inkfree', 20, 2)
 textposx, textposy = 40, 12
+food = random.choice(foodpics)
 
 def buttons(pos = None):
     global autoplay, activespeed, speed
@@ -113,13 +114,15 @@ class Snake:
         self.check_eaten()
 
     def check_eaten(self):
+        global food
         loc = (mygrid.boxes[self.food[0]][self.food[1]].position.x+3, mygrid.boxes[self.food[0]][self.food[1]].position.y+3)
-        screen.blit(foodpic, loc)
+        screen.blit(food, loc)
         if self.food == (self.body[0].i, self.body[0].j):
             b = set([(seg.i, seg.j) for seg in self.body])
             self.a -= b
             self.food = random.choice(list(self.a))
             self.grow()
+            food = random.choice(foodpics)
 
     def check_dead(self):
         i, j = self.body[0].i, self.body[0].j
